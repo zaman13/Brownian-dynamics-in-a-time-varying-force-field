@@ -1,6 +1,5 @@
 # Brownian-dynamics-in-a-time-varying-force-field
 
-# Three-Body-Problem-Gravitational-System
 <p float="left">
 <a href = "https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/tree/main/Codes"> <img src="https://img.shields.io/badge/Language-Python-blue" alt="alt text"> </a>
 <a href = "https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/LICENSE"> <img src="https://img.shields.io/badge/license-MIT-green" alt="alt text"></a>
