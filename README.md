@@ -16,7 +16,12 @@ The Brownian motion code solves the Langevin equation in discrete time. The code
 
 The python script was tested with spyder IDE. 
 
+## Theory
+The Brownian motion of a colloidal particle in a low Reynolds number environment can be modeled by the Langevin equation: 
 
+<img src="https://render.githubusercontent.com/render/math?math=\mathbf{\dot{r}}(t) = \frac{\overset{\leftrightarrow}{\mathbf{D}}(\mathbf{r})}{k_B T} \mathbf{F}_\text{ext}(\mathbf{r},t) + \sqrt{2} \overset{\leftrightarrow}{\mathbf{D}}_{1/2}(\mathbf{r})  \mathbf{W}(t)">
+
+Here,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{r} = (x_o,y_o,z_o)"> is the position of the center of the particle,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}_\text{ext}"> is the external trapping/manipulation force acting on the particle,  <img src="https://render.githubusercontent.com/render/math?math=k_B"> is the Boltzmann constant,  <img src="https://render.githubusercontent.com/render/math?math=T"> is the temperature,  <img src="https://render.githubusercontent.com/render/math?math=\overset{\leftrightarrow}{\mathbf{D}}"> is the diffusion tensor, and  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{W}(t)"> is a vector white noise term. The tensor  <img src="https://render.githubusercontent.com/render/math?math=\overset{\leftrightarrow}{\mathbf{D}}_{1/2}"> is defined as the element-wise square root of  <img src="https://render.githubusercontent.com/render/math?math=\overset{\leftrightarrow}{\mathbf{D}}">. Each Cartesian component of  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{W}(t)"> is a random process unit zero mean and unit variance. 
 
 
 
