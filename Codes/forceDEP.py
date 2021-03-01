@@ -14,25 +14,25 @@ xrange_limit = 250e-6
 
 
 
-# Read force data from data file
-Mdata = np.genfromtxt('xsweep_ro=10u,zo=25u.csv',delimiter=',',skip_header=5)
-xdata = Mdata[:,0]*1e-6
-Fxdata = Mdata[:,3]*1e-12
-Fydata = 6*Mdata[:,2]*1e-12
-Fzdata = Mdata[:,4]*1e-12
-# Note that the axis has been changed. The axis from the csv data file is different.
+# # Read force data from data file
+# Mdata = np.genfromtxt('xsweep_ro=10u,zo=25u.csv',delimiter=',',skip_header=5)
+# xdata = Mdata[:,0]*1e-6
+# Fxdata = Mdata[:,3]*1e-12
+# Fydata = 6*Mdata[:,2]*1e-12
+# Fzdata = Mdata[:,4]*1e-12
+# # Note that the axis has been changed. The axis from the csv data file is different.
 
 
 
 
-# Interpolation function when using force value from data file    
-def force_interp(ri,ri_active,Np):
-    # Interpolate function for the imported force data(csv file)
-    fi = np.zeros((3,Np))
-    fi[0,:] = np.interp((ri[1,:]-ri_active),xdata,Fxdata)  
-    fi[1,:] = np.interp((ri[1,:]-ri_active),xdata,Fydata)
-    fi[2,:] = np.interp((ri[1,:]-ri_active),xdata,Fzdata)
-    return fi
+# # Interpolation function when using force value from data file    
+# def force_interp(ri,ri_active,Np):
+#     # Interpolate function for the imported force data(csv file)
+#     fi = np.zeros((3,Np))
+#     fi[0,:] = np.interp((ri[1,:]-ri_active),xdata,Fxdata)  
+#     fi[1,:] = np.interp((ri[1,:]-ri_active),xdata,Fydata)
+#     fi[2,:] = np.interp((ri[1,:]-ri_active),xdata,Fzdata)
+#     return fi
 
 
 
@@ -74,8 +74,8 @@ def force_random(rr,r_active,Np,t):
 
 # Force profile centered around the origin    
 def force_origin(r,r_active,t,Np):
-     return force_interp(r,r_active,Np) + force_random(r,r_active,Np,t)
-    #return force_model(r,r_active,Np) + force_random(r,r_active,Np,t)
+     # return force_interp(r,r_active,Np) + force_random(r,r_active,Np,t)
+    return force_model(r,r_active,Np) + force_random(r,r_active,Np,t)
 
 
 
