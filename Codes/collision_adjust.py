@@ -41,13 +41,19 @@ def euclidean_dist(r_in):
     # Subtracting the matrix with its transpose
     deq = np.square(xp1-np.transpose(xp1)) + np.square(yp1-np.transpose(yp1)) + np.square(zp1-np.transpose(zp1))    
   
-    
-    return np.sqrt(deq)
+    # We return only the upper triangle matrix as that contains distances of all paired points. The lower
+    # triangle matrix contains the same information. Selecting one avoids repeatation. 
+    return np.triu(np.sqrt(deq))
 
 
 def collision_detect(r_in,ro):
     deq = euclidean_dist(r_in)
-    ind_mat = np.where(deq < 2.0*ro)
+    
+    ind_mat = np.where((deq < 2.0*ro) & (deq != 0))  
+    # Some elements are avoided during the search
+    # deq = 0 represents self-distance. 
+    # deq = 0 also Or elements of the lower traingle matrix which was truncated in euclidean_dist(.)
+    
     ind1 = ind_mat[0]
     ind2 = ind_mat[1]
     
@@ -79,8 +85,12 @@ def velocity_adjust(r_in,v_in,ro):
     #     i1 = int(ind1[m])
     #     v_out[:,i1] = 0
     
+    
+    # Randomize collision order
+    # m_ord = np.arange(ind1.size)
 
     for m in range(ind1.size):
+    # for m in m_ord:
         i1 = int(ind1[m])
         i2 = int(ind2[m])
         
@@ -92,10 +102,14 @@ def velocity_adjust(r_in,v_in,ro):
               
             print('Particle distance less than diamter! \n')
             print('No of collision detected = %i \n' % ind1.size)     
-            r_norm = 2*ro
-            n_vect = 2*ro*n_vect/r_norm
+            # r_norm = 2*ro
+            # n_vect = 2*ro*n_vect/r_norm
             
         v_out[:,i1] = v_in[:,i1] - n_vect * np.dot(v_in[:,i1] - v_in[:,i2], n_vect) / r_norm**2
+        v_out[:,i2] = v_in[:,i2] - n_vect * np.dot(v_in[:,i2] - v_in[:,i1], n_vect) / r_norm**2
+        
+        v_in = np.copy(v_out)   # Make sure that the updated velocity is used for the next collision
+
         # v_out[:,i1] = v_out[:,i1] - n_vect * np.dot(v_out[:,i1] - v_out[:,i2], n_vect) / r_norm**2
         # v_out[:,i1] = v_out[:,i1] + v_in[:,i1] - n_vect * np.dot(v_in[:,i1] - v_in[:,i2], n_vect) / r_norm**2
         
@@ -103,7 +117,33 @@ def velocity_adjust(r_in,v_in,ro):
     return v_out
         
         
-    
+
+# Np = 4
+
+
+# ro = .1
+
+
+# r = np.random.rand(3,Np,2)
+# # v = np.zeros((3,Np,2))
+# v = np.random.rand(3,Np,2)
+
+# p1 = r[:,:,0]
+# v1 = v[:,:,0]
+
+
+# # p1 = np.array([[0, 0],[0,1],[0, 0]])
+# # v1 = np.array([[.4, 0],[1, -1],[0, 0]])
+
+
+# ind1,ind2 = collision_detect(p1,ro)
+
+# vo = velocity_adjust(p1,v1,ro)
+# deq = euclidean_dist(p1)
+# v[:,:,0] = vo
+
+# print(v1)
+# print(vo)
 
   
 
