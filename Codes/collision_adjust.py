@@ -49,7 +49,7 @@ def euclidean_dist(r_in):
 def collision_detect(r_in,ro):
     deq = euclidean_dist(r_in)
     
-    ind_mat = np.where((deq < 2.0*ro) & (deq != 0))  
+    ind_mat = np.where((deq <= 2.0*ro) & (deq != 0))  
     # Some elements are avoided during the search
     # deq = 0 represents self-distance. 
     # deq = 0 also Or elements of the lower traingle matrix which was truncated in euclidean_dist(.)
@@ -74,17 +74,12 @@ def collision_detect(r_in,ro):
     return ind_fix1, ind_fix2
 
 
-def velocity_adjust(r_in,v_in,ro):
+def velocity_adjust(r_in,v_in,ro,damping_factor):
     ro = 1.05*ro
     v_out = np.copy(v_in)
     
     ind1, ind2 = collision_detect(r_in,ro)
 
-    # # Reset velocities for the particles that are colliding
-    # for m in range(ind1.size):
-    #     i1 = int(ind1[m])
-    #     v_out[:,i1] = 0
-    
     
     # Randomize collision order
     # m_ord = np.arange(ind1.size)
@@ -102,6 +97,7 @@ def velocity_adjust(r_in,v_in,ro):
               
             print('Particle distance less than diamter! \n')
             print('No of collision detected = %i \n' % ind1.size)     
+            
             # r_norm = 2*ro
             # n_vect = 2*ro*n_vect/r_norm
             
@@ -114,7 +110,7 @@ def velocity_adjust(r_in,v_in,ro):
         # v_out[:,i1] = v_out[:,i1] + v_in[:,i1] - n_vect * np.dot(v_in[:,i1] - v_in[:,i2], n_vect) / r_norm**2
         
         
-    return v_out
+    return v_out*(1-damping_factor)
         
         
 
