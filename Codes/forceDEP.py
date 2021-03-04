@@ -7,11 +7,17 @@ Created on Tue Feb 23 17:44:46 2021
 """
 
 import numpy as np
+import pylab as py
+
 
 xrange_limit = 250e-6
 
 
-
+# Draw electrodes for the animation
+def draw_electrodes(elec_width, elec_spacing):
+    for kk in range(-2,3):
+        rectangle = py.Rectangle((-xrange_limit*1e6/2, -elec_width/2+kk*elec_spacing),xrange_limit*1e6,elec_width,fc='#002366')
+        py.gca().add_patch(rectangle)
 
 
 # # Read force data from data file
