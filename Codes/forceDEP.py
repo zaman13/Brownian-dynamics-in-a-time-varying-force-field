@@ -10,11 +10,18 @@ import numpy as np
 import pylab as py
 
 
-xrange_limit = 250e-6
+xrange_limit = 250e-6   # Max and min of x axis range for plotting animation
+
+# Electrode array geometry (units in um)
+# =============================================================================
+elec_width = 15
+elec_spacing = 50
+# =============================================================================
+
 
 
 # Draw electrodes for the animation
-def draw_electrodes(elec_width, elec_spacing):
+def draw_source():
     for kk in range(-2,3):
         rectangle = py.Rectangle((-xrange_limit*1e6/2, -elec_width/2+kk*elec_spacing),xrange_limit*1e6,elec_width,fc='#002366')
         py.gca().add_patch(rectangle)
@@ -85,11 +92,15 @@ def force_origin(r,r_active,t,Np):
 
 
 
+
+# This is function that is called from the main program
 # Time dependent force field. Implementation of the switching sequence
-def force_movingDEP(r,t, elec_spacing,Np):
+def force_profile(r,t):
     
     # define switching instances
    
+    Np = r[0,:].size
+    
     ts = np.linspace(0,38,20)  
   
     # define active electrode position at switching

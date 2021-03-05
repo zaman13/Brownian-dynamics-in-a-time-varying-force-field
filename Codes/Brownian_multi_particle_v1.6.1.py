@@ -43,11 +43,22 @@ Updates
         - Executation/elapsed time added
         - Status messages added
         - uploaded as v1.5
--Feb 24-28, 2021
+- Feb 24-28, 2021
         - Added particle-particle elastic collision dynaimics
         - Works fine for two simultaneous collisions. For larger number of simultaneous collisions, some modifications are needed.                - 
 
-
+- March 2, 2021
+        - Decoupled the simulation time step to animation frame rate. They can be independently defined now.
+- March 3, 2021
+        - Moved the draw_electrode() function outside the init() function
+- March 3, 2021
+        - Removed excess parameters from the force functions
+        - Made the different force functions, i.e. forceDEP.py and force_spring_trap.py more consistent with each other
+          Only the import call and final time needs to be adjusted for when switching the force functions. The main output
+          from both imports are function_profile(r,t).
+        
+        
+        
 """
 
 
@@ -72,14 +83,12 @@ print('\n\n===========================================\n')
 
 
 
+   
+
 # Animation function. Reads out the positon coordinates sequentially
 
 def init():
     # Initialization function for the animate function
-    # Draw electrodes
-    for kk in range(-2,3):
-        rectangle = py.Rectangle((-xplt_limit*1e6/2, -elec_width/2+kk*elec_spacing),xplt_limit*1e6,elec_width,fc='b')
-        py.gca().add_patch(rectangle)
   
     for np in range(Np):
         ax.add_patch(beads[np])    
@@ -92,16 +101,20 @@ def init():
 
 def animate(i):
     # Animation function
- 
-
+    # This function is called frame_rate*tfinal times
+    # Simulation has Nt steps
+    # So, animation should be called every Nt/(frame_rate*tfinal) steps.
+    
+    fct_adj = int(Nt/(frame_rate*tfinal))
+    
     for np in range(Np):
         
-        x1 = r_um[0,np,i]
-        y1 = r_um[1,np,i]
+        x1 = r_um[0,np,i*fct_adj]
+        y1 = r_um[1,np,i*fct_adj]
         beads[np].center = (x1,y1)
-          
+        # print(i)
     #py.text(0,100,'time, t =',fontsize=12) 
-    time_string.set_text(time_template % (i*delta_t))
+    time_string.set_text(time_template % (i*fct_adj*delta_t))  # Adjust time display by fct_adj factor
     
      
     return beads
@@ -120,31 +133,25 @@ T = 300
 eta = 8.9e-4
 ro = 10e-6;
 gamma = 6*np.pi*eta*ro
-
-
 D0 = k_B*T/gamma
-tfinal =  38 # 6 # 38
-Nt = 1501 # 300 #1501   # Number of time steps
-Np = 2       # Number of particles
-#x_trap = 70e-6  # center of the trap for the test function
-xplt_limit = 250e-6;
 
 
-rho = 1055  # density of polystyrene beads in kg/m3
-mo = rho*(4/3)*np.pi*ro**3
+frame_rate = 30   # Animation frame rate in fps
+
+tfinal =  38  #38 # 6 # 38
+Nt = frame_rate*80 # 300 #1501   # Number of time steps
+Np = 3       # Number of particles
+# xplt_limit = 250e-6;
 
 
+rho = 1055                      # density of polystyrene beads in kg/m3
+mo = rho*(4/3)*np.pi*ro**3      # mass of a polystyrene bead in kg
+damping_factor = 0.0            # Fraction of the velocity that is lost during each collision
 
 
 # =============================================================================
 
 
-
-# Electrode array geometry (units in um)
-# =============================================================================
-elec_width = 15
-elec_spacing = 50
-# =============================================================================
 
 
 
@@ -188,7 +195,7 @@ fct2 = mo/(gamma*delta_t)
 # Time evolution of the Langevin equation
 # =============================================================================
 
-# r[:,:,0] = np.random.normal(-100e-6,100e-6,(3,Np))  # Random white noise term
+# r[:,:,0] = np.random.normal(0,xrange_limit/2,(3,Np))  # Random white noise term
 # r[2,:,0] = 0
 # r[0,0,0] = 0e-6
 # r[1,0,0] = 0e-6
@@ -197,10 +204,10 @@ fct2 = mo/(gamma*delta_t)
 
 r[0,0,0] = 0e-6
 r[1,0,0] = -100e-6
-r[0,1,0] = 0e-6
+r[0,1,0] = 5e-6
 r[1,1,0] = 40e-6
-# r[0,2,0] = 10e-6
-# r[1,2,0] = 50e-6
+r[0,2,0] = 20e-6
+r[1,2,0] = 50e-6
 
 print('Solving Langevin equation ... \n')
 
@@ -212,12 +219,14 @@ for m in range(Nt-1):
     # print(tmp)
     
     # force_temp = force_trap(r[:,:,m],0,t[m], Np)
-    force_temp = force_movingDEP(r[:,:,m],t[m], elec_spacing,Np)
+    force_temp = force_profile(r[:,:,m],t[m])
     
     v_temp = 1/(1+fct2)*(fct2*v[:,:,m] + force_temp/gamma + v_br[:,:,m])
     # v_temp = v_temp*(-1.0)
-    v[:,:,m+1] = velocity_adjust(r[:,:,m], v_temp, ro)
-    r[:,:, m+1] = r[:,:,m] + v[:,:,m+1]*delta_t 
+    v[:,:,m+1] = velocity_adjust(r[:,:,m], v_temp, ro, damping_factor)
+    r[:,:, m+1] = r[:,:,m] + v[:,:,m+1]*delta_t             # Euler-Cromer method
+
+    # r[:,:, m+1] = r[:,:,m] + (v[:,:,m] + v[:,:,m+1])*delta_t*0.5 
     # r[2,:,:] = 0    # Fix z position to 0 to limit motion in 2D only
     
     # v[:,:,m] = velocity_adjust(r[:,:,m], fct[:,:,m]/delta_t + force_trap(r[:,:,m],0,t[m], Np)/gamma, ro)
@@ -226,13 +235,7 @@ for m in range(Nt-1):
     # r[:,:, m+1] = r[:,:,m] + v[:,:,m]*delta_t 
 
     
-    # if m < 2:
-    #     r[:,:, m+1] = r[:,:,m] + v[:,:,m]*delta_t 
-    # else:
-    #     r[:,:, m+1] = r[:,:,m] + v[:,:,m]*delta_t + (mo/gamma)/(delta_t**2)*(-5*r[:,:,m] + 4*r[:,:,m-1] - r[:,:,m-2])
-    #     r[:,:,m+1] = r[:,:,m+1] * (gamma*delta_t**2 - 2*mo) / (gamma * delta_t**2)
-    
-    
+ 
 
 
 
@@ -251,7 +254,7 @@ v_um = v*1e6   # velocity in um/s
 py.figure(1)
 #py.plot(t,x_um[:,0])
 for np in range(Np):
-    py.plot(t,r_um[1, np,:], label = 'particle %s' % np)     # y-position, partilce np, all time
+    py.plot(t,r_um[1, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
 
 # py.plot(t,x_um[:,2])
 py.xlabel('$t$ (s)')
@@ -262,7 +265,7 @@ py.legend()
 py.figure()
 #py.plot(t,x_um[:,0])
 for np in range(Np):
-    py.plot(t,r_um[2, np,:], label = 'particle %s' % np)     # y-position, partilce np, all time
+    py.plot(t,r_um[2, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
 
 # py.plot(t,x_um[:,2])
 py.xlabel('$t$ (s)')
@@ -274,7 +277,7 @@ py.legend()
 py.figure()
 #py.plot(t,x_um[:,0])
 for np in range(Np):
-    py.plot(t,v_um[1, np,:], label = 'particle %s' % np)     # y-position, partilce np, all time
+    py.plot(t,v_um[1, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
 
 # py.plot(t,x_um[:,2])
 py.xlabel('$t$ (s)')
@@ -304,21 +307,32 @@ fig = py.figure()
 fig.set_dpi(100)
 fig.set_size_inches(7, 7)
 
-ax = py.axes(xlim=(-1e6*xplt_limit, 1e6*xplt_limit), ylim=(-1e6*xplt_limit, 1e6*xplt_limit))
-# patch1 = py.Circle((0, 0), ro*1e6, fc='r')
-# patch2 = py.Circle((0, 0), ro*1e6, fc='r')
+ax = py.axes(xlim=(-1e6*xrange_limit, 1e6*xrange_limit), ylim=(-1e6*xrange_limit, 1e6*xrange_limit))
 beads = []
 
 for np in range(Np):
-     beads.append(plt.patches.Circle((r_um[0,np,0], r_um[1,np,0]), ro*1e6, fc='r',ec = 'k'))
+     beads.append(plt.patches.Circle((r_um[0,np,0], r_um[1,np,0]), ro*1e6, fc='#C21808',ec = 'k'))
     
 
 time_template = 'Time = %.1f s'
 time_string = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
+
+draw_source()
+
+
+
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                frames=Nt, interval=100, blit=True)
-anim.save('br_v1.4.mp4', fps=Nt/tfinal, extra_args=['-vcodec', 'libx264'])
+                                frames=int(frame_rate*tfinal), interval=100, blit=True)
+
+
+
+anim.save('br_v1.6.mp4', fps=frame_rate, extra_args=['-vcodec', 'libx264'])
+
+
+# anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                # frames=Nt, interval=100, blit=True)
+# anim.save('br_v1.4.mp4', fps=Nt/tfinal, extra_args=['-vcodec', 'libx264'])
 
 print('Done.\n')
 # =============================================================================
