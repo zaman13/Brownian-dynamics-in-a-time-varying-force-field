@@ -16,6 +16,10 @@ The Brownian motion code solves the Langevin equation in discrete time. The code
 
 The python script was tested with spyder IDE. 
 
+## Package requirements
+  - NumPy <a href = "https://docs.scipy.org/doc/numpy/reference/"> <img src="https://img.shields.io/badge/Pkg-NumPy-FF4500" alt="alt text"> </a>
+  - Pylab, Matplotlib (sparse matrices, sparse linear algebra) <a href = "https://scipy.github.io/old-wiki/pages/PyLab"> <img src="https://img.shields.io/badge/Pkg-Pylab-FF7F50" alt="alt text"> </a> <a href = "https://www.tutorialspoint.com/matplotlib/matplotlib_pylab_module.htm"> <img src="https://img.shields.io/badge/Pkg-Matplotlib-FF7F50" alt="alt text"> </a>
+  - FuncAnimation() is used for animation <a href = "https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.FuncAnimation.html"> <img src="https://img.shields.io/badge/Function-FuncAnimation-00783f" alt="alt text"> </a>
 ## Theory
 The Brownian motion of a colloidal particle in a low Reynolds number environment can be modeled by the Langevin equation: 
 
@@ -29,7 +33,7 @@ The Langevin equation can be converted into the following discrete form:
 The equaiton is numerically solved using the Euler-Maruyama method.
 
 
-## Requirements
+
 
 
 
