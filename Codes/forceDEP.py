@@ -21,10 +21,27 @@ elec_spacing = 50
 
 
 # Draw electrodes for the animation
-def draw_source():
-    for kk in range(-2,3):
-        rectangle = py.Rectangle((-xrange_limit*1e6/2, -elec_width/2+kk*elec_spacing),xrange_limit*1e6,elec_width,fc='#002366')
-        py.gca().add_patch(rectangle)
+def draw_source(tm):
+    # tm is a dummy argument for this case (to make it consistent with other force functions)
+    
+    # The flag_source_state variable is used to draw/erase the source geometry only once
+    # This is necessary to speed up the animation.
+    
+    if 'flag_source_state' not in globals():
+        global flag_source_state     # Make this variable global so that the assigned value remains saved globally as t changes
+        flag_source_state = 0        # initialize with OFF state
+        print('Defining global flag for source geometry \n')
+        
+    
+    
+    
+    if flag_source_state == 0:
+        for kk in range(-2,3):
+            rectangle = py.Rectangle((-xrange_limit*1e6/2, -elec_width/2+kk*elec_spacing),xrange_limit*1e6,elec_width,fc='#002366')
+            py.gca().add_patch(rectangle)
+        
+        print('Drawing source\n')
+        flag_source_state = 1
 
 
 # # Read force data from data file

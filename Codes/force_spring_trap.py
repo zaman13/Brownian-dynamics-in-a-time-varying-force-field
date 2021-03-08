@@ -12,7 +12,7 @@ xrange_limit = 100e-6    # Max and min of x axis range for plotting animation
 r_active = 0
 
 
-def draw_source():
+def draw_source(tm):
     return 0
 
 # This is function that is called from the main program
