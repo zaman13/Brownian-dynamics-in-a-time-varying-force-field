@@ -10,7 +10,10 @@ import numpy as np
 import pylab as py
 
 
+
 xrange_limit = 250e-6   # Max and min of x axis range for plotting animation
+zlow_limit = -20e-6
+zhigh_limit = 150e-6
 
 # Electrode array geometry (units in um)
 # =============================================================================
@@ -36,9 +39,12 @@ def draw_source(tm):
     
     
     if flag_source_state == 0:
+        substrate_xy = py.Rectangle((-xrange_limit*1e6, -xrange_limit*1e6),2*xrange_limit*1e6,2*xrange_limit*1e6,fc='#f9f9f9')
+        py.gca().add_patch(substrate_xy)
         for kk in range(-2,3):
             rectangle = py.Rectangle((-xrange_limit*1e6/2, -elec_width/2+kk*elec_spacing),xrange_limit*1e6,elec_width,fc='#002366')
             py.gca().add_patch(rectangle)
+            # ax.add_patch(rectangle)
         
         print('Drawing source\n')
         flag_source_state = 1
@@ -78,7 +84,7 @@ def force_model(rm,r_active,Np):
     
     fm[0,:] = 0
     fm[1,:] = -k*(rm[1,:]-r_active)
-    fm[2,:] = 0     
+    fm[2,:] = -k*(rm[2,:])     
     return fm
 
 # Random force component

@@ -74,7 +74,7 @@ def collision_detect(r_in,ro):
     return ind_fix1, ind_fix2
 
 
-def velocity_adjust(r_in,v_in,ro,damping_factor):
+def particle_collision_adjust(r_in,v_in,ro,damping_factor):
     ro = 1.05*ro
     v_out = np.copy(v_in)
     
@@ -96,7 +96,7 @@ def velocity_adjust(r_in,v_in,ro,damping_factor):
         if r_norm < 2*ro:
               
             print('Particle distance less than diamter! \n')
-            print('No of collision detected = %i \n' % ind1.size)     
+            print('No of particle-particle collisions detected = %i \n' % ind1.size)     
             
             # r_norm = 2*ro
             # n_vect = 2*ro*n_vect/r_norm

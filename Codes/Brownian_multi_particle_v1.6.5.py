@@ -56,10 +56,17 @@ Updates
         - Made the different force functions, i.e. forceDEP.py and force_spring_trap.py more consistent with each other
           Only the import call and final time needs to be adjusted for when switching the force functions. The main output
           from both imports are function_profile(r,t).
-- March7, 2021
+- March 7, 2021
         - Added zorder for animating the beads (beads append). This ensures that the beads are always in the foreground (compared to source geometry)        
         - Added draw_source(t) function inside the animate() function. Also, made the draw_source() as a funciton of time for dynamic
           manipulation of the source geometry (e.g. turning ON/OFF optical excitation for optical trapping demo.)
+- March 8-10, 2021
+        - Added x,y,z position vs time plots
+        - Added animation for yz, and zx planes along with xy plane
+- March 11, 2021
+        - Added wall collision mechanics
+        - Added substrate graphics
+        - Renamed some of the modules
         
         
 """
@@ -76,8 +83,9 @@ import matplotlib as plt
 
 from matplotlib import animation, rc
 
-from collision_adjust import *
 
+from particle_particle_collision_adjust import *
+from particle_wall_collision_adjust import *
 
 from forceDEP import *
 # from force_spring_trap import *
@@ -98,13 +106,20 @@ def init():
     # Initialization function for the animate function
   
     for np in range(Np):
-        ax.add_patch(beads[np])    
+        ax1.add_patch(beads_xy[np]) 
+        ax2.add_patch(beads_yz[np]) 
+        ax3.add_patch(beads_xz[np]) 
   
     
-    ax.set_xlabel('$x$ ($\mu$m)')
-    ax.set_ylabel('$y$ ($\mu$m)')
+    ax1.set_xlabel('$x$ ($\mu$m)')
+    ax1.set_ylabel('$y$ ($\mu$m)')
+    ax2.set_xlabel('$y$ ($\mu$m)')
+    ax2.set_ylabel('$z$ ($\mu$m)')
+    ax3.set_xlabel('$x$ ($\mu$m)')
+    ax3.set_ylabel('$z$ ($\mu$m)')
     
-    return beads
+    
+    return beads_xy
 
 def animate(i):
     # Animation function
@@ -118,13 +133,18 @@ def animate(i):
         
         x1 = r_um[0,np,i*fct_adj]
         y1 = r_um[1,np,i*fct_adj]
-        beads[np].center = (x1,y1)
+        z1 = r_um[2,np,i*fct_adj]
+        beads_xy[np].center = (x1,y1)
+        beads_yz[np].center = (y1,z1)
+        beads_xz[np].center = (x1,z1)
+        
         # print(i)
     #py.text(0,100,'time, t =',fontsize=12) 
     time_string.set_text(time_template % (i*fct_adj*delta_t))  # Adjust time display by fct_adj factor
+    py.sca(ax1)
     draw_source(i*fct_adj*delta_t)
      
-    return beads
+    return beads_xy
 
 
 
@@ -178,8 +198,8 @@ r = np.zeros((3,Np,Nt))              # position vector
 v = np.zeros((3,Np,Nt))              # velocity vector
 v_temp = np.zeros((3,Np))
 force_temp = np.zeros((3,Np))
-v_drift = np.zeros(3)                # Drift velocity (constant, time independent, same for all particles)
-#v_drift[0] = -2e-6                   # Drift adjust
+v_drift = np.zeros((3,Np))           # Drift velocity (constant, time independent, same for all particles)
+# v_drift[0,:] = -2e-6                 # Drift adjust
 w = np.random.normal(0,1,(3,Np,Nt))  # Random white noise term
 D = np.ones((3,Np,Nt))*D0            # Diffustion tensor
 # =============================================================================
@@ -215,6 +235,7 @@ r[0,1,0] = 5e-6
 r[1,1,0] = 40e-6
 r[0,2,0] = 20e-6
 r[1,2,0] = 50e-6
+r[2,:,0] = 100e-6
 
 print('Solving Langevin equation ... \n')
 
@@ -230,7 +251,10 @@ for m in range(Nt-1):
     
     v_temp = 1/(1+fct2)*(fct2*v[:,:,m] + force_temp/gamma + v_br[:,:,m])
     # v_temp = v_temp*(-1.0)
-    v[:,:,m+1] = velocity_adjust(r[:,:,m], v_temp, ro, damping_factor)
+    v_temp = particle_collision_adjust(r[:,:,m], v_temp, ro, damping_factor) + v_drift
+    # v[:,:,m+1] = v_temp
+    v[:,:,m+1] = wall_collision_adjust(r[:,:,m], v_temp, ro, damping_factor)
+    
     r[:,:, m+1] = r[:,:,m] + v[:,:,m+1]*delta_t             # Euler-Cromer method
 
     # r[:,:, m+1] = r[:,:,m] + (v[:,:,m] + v[:,:,m+1])*delta_t*0.5 
@@ -258,7 +282,18 @@ v_um = v*1e6   # velocity in um/s
 
 
 # Plotting time vs position data
-py.figure(1)
+py.figure()
+#py.plot(t,x_um[:,0])
+for np in range(Np):
+    py.plot(t,r_um[0, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
+
+# py.plot(t,x_um[:,2])
+py.xlabel('$t$ (s)')
+py.ylabel('$x$ ($\mu$m)')
+py.legend()
+
+
+py.figure()
 #py.plot(t,x_um[:,0])
 for np in range(Np):
     py.plot(t,r_um[1, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
@@ -311,18 +346,52 @@ py.ylabel('$y$ ($\mu$m)')
 print('Processing animation ... \n')
 
 fig = py.figure()
-fig.set_dpi(100)
-fig.set_size_inches(7, 7)
+gs = py.GridSpec(2,2) # 2 rows, 3 columns
 
-ax = py.axes(xlim=(-1e6*xrange_limit, 1e6*xrange_limit), ylim=(-1e6*xrange_limit, 1e6*xrange_limit))
-beads = []
+
+
+ax1 = fig.add_subplot(gs[:,0],aspect = 1)       # xy plane (column left, both rows)
+ax2 = fig.add_subplot(gs[0,1],aspect = 1)       # yz plane (column right, top row)
+ax3 = fig.add_subplot(gs[1,1],aspect = 1)       # xz plane (column right, bottoom row)
+
+
+# fig = py.figure()
+fig.set_dpi(100)
+fig.set_size_inches(14, 6)
+
+# ax = py.axes(xlim=(-1e6*xrange_limit, 1e6*xrange_limit), ylim=(-1e6*xrange_limit, 1e6*xrange_limit))
+
+ax1.set_xlim(-1e6*xrange_limit, 1e6*xrange_limit)
+ax1.set_ylim(-1e6*xrange_limit, 1e6*xrange_limit)
+ax2.set_xlim(-1e6*xrange_limit, 1e6*xrange_limit)
+ax2.set_ylim(1e6*zlow_limit, 1e6*zhigh_limit)
+ax3.set_xlim(-1e6*xrange_limit, 1e6*xrange_limit)
+ax3.set_ylim(1e6*zlow_limit, 1e6*zhigh_limit)
+
+
+py.sca(ax2)
+substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+py.gca().add_patch(substrate_yz)
+py.sca(ax3)
+substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+py.gca().add_patch(substrate_yz)
+
+# ax.set_size_inches(6,6)
+
+beads_xy = []
+beads_yz = []
+beads_xz = []
+
 
 for np in range(Np):
-     beads.append(plt.patches.Circle((r_um[0,np,0], r_um[1,np,0]), ro*1e6, fc='#C21808',ec = 'k',zorder = 10))
+     beads_xy.append(plt.patches.Circle((r_um[0,np,0], r_um[1,np,0]), ro*1e6, fc='#C21808',ec = 'k',zorder = 10))
+     beads_yz.append(plt.patches.Circle((r_um[1,np,0], r_um[2,np,0]), ro*1e6, fc='#C21808',ec = 'k',zorder = 10))
+     beads_xz.append(plt.patches.Circle((r_um[0,np,0], r_um[2,np,0]), ro*1e6, fc='#C21808',ec = 'k',zorder = 10))
     
 
 time_template = 'Time = %.1f s'
-time_string = ax.text(0.05, 0.9, '', transform=ax.transAxes)
+time_string = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+
 
 
 # draw_source()
