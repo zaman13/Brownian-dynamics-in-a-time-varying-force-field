@@ -43,7 +43,7 @@ The equaiton is numerically solved using the Euler-Maruyama method.
 ## Sample output
 ### Sample output for moving DEP force profile:
 <p float="left">
-<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_moving_DEP/br_v1.6.gif" alt="alt text" width="360">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_moving_DEP/br_v1.6.gif" alt="alt text" width="720">
 </p>
 
 The position and velocity profiles are:
