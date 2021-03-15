@@ -24,7 +24,7 @@ elec_spacing = 50
 
 
 # Draw electrodes for the animation
-def draw_source(tm):
+def draw_xy(tm):
     # tm is a dummy argument for this case (to make it consistent with other force functions)
     
     # The flag_source_state variable is used to draw/erase the source geometry only once
@@ -49,6 +49,16 @@ def draw_source(tm):
         print('Drawing source\n')
         flag_source_state = 1
 
+
+
+def draw_yz(tm):
+    substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_yz)
+    
+
+def draw_xz(tm):
+    substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_xz)
 
 # # Read force data from data file
 # Mdata = np.genfromtxt('xsweep_ro=10u,zo=25u.csv',delimiter=',',skip_header=5)

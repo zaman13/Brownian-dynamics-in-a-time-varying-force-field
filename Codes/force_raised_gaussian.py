@@ -11,6 +11,10 @@ import pylab as py
 
 
 xrange_limit = 30e-6    # Max and min of x axis range for plotting animation
+zlow_limit = -10e-6
+zhigh_limit = 30e-6
+
+
 r_active = 0
 n_order = 1             # Order of the Gaussian potential = 2n
 w_well = 10e-6          # 1/e *max width of the potential well
@@ -22,7 +26,7 @@ A_well = 4000*1.38e-23*300   # well depth
 
 
 
-def draw_source(tm):
+def draw_xy(tm):
     # March 7, 2021
     
     # The flag_source_state variable is used to draw/erase the source geometry only once
@@ -52,7 +56,14 @@ def draw_source(tm):
    
     
 
+def draw_yz(tm):
+    substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_yz)
+    
 
+def draw_xz(tm):
+    substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_xz)
 
 
 # This is function that is called from the main program
@@ -101,7 +112,7 @@ def force_plot():
     py.ylabel('Force (pN)')
     py.legend()
     
-force_plot()
+# force_plot()
 
 # draw_source(9)
 

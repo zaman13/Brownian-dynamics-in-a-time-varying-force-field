@@ -9,11 +9,26 @@ Created on Thu Feb 25 11:31:12 2021
 import numpy as np
 
 xrange_limit = 100e-6    # Max and min of x axis range for plotting animation
+zlow_limit = -20e-6
+zhigh_limit = 150e-6
+
+
 r_active = 0
 
 
-def draw_source(tm):
+def draw_xy(tm):
     return 0
+
+def draw_yz(tm):
+    substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_yz)
+    
+
+def draw_xz(tm):
+    substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+    py.gca().add_patch(substrate_xz)
+    
+    
 
 # This is function that is called from the main program
 # Simplified spring force model

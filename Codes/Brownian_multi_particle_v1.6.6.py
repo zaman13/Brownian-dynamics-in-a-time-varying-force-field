@@ -67,6 +67,9 @@ Updates
         - Added wall collision mechanics
         - Added substrate graphics
         - Renamed some of the modules
+- March 14, 2021
+        - Streamlined the plots
+        - Fixed random distribution of initial position
         
         
 """
@@ -142,12 +145,17 @@ def animate(i):
     #py.text(0,100,'time, t =',fontsize=12) 
     time_string.set_text(time_template % (i*fct_adj*delta_t))  # Adjust time display by fct_adj factor
     py.sca(ax1)
-    draw_source(i*fct_adj*delta_t)
+    draw_xy(i*fct_adj*delta_t)
      
     return beads_xy
 
 
-
+def my_plot(fig_no, xp,yp,xlbl,ylbl,lgnd):
+    py.figure(fig_no)
+    py.plot(xp, yp, label = lgnd)
+    py.xlabel(xlbl)
+    py.ylabel(ylbl)
+    py.legend()
 
         
     
@@ -166,7 +174,7 @@ D0 = k_B*T/gamma
 frame_rate = 30   # Animation frame rate in fps
 
 tfinal =  38  #38 # 6 # 38
-Nt = frame_rate*40 # 300 #1501   # Number of time steps
+Nt =frame_rate*40 # 300 #1501   # Number of time steps
 Np = 3       # Number of particles
 # xplt_limit = 250e-6;
 
@@ -192,7 +200,7 @@ print('Final time = %1.2f seconds \n' % tfinal)
 
 # Variables (initialization)
 # =============================================================================
-t = np.linspace(0,tfinal,Nt)      # time variable for the simulation
+t = np.linspace(0,tfinal,Nt)         # time variable for the simulation
 r = np.zeros((3,Np,Nt))              # position vector
 
 v = np.zeros((3,Np,Nt))              # velocity vector
@@ -222,7 +230,8 @@ fct2 = mo/(gamma*delta_t)
 # Time evolution of the Langevin equation
 # =============================================================================
 
-# r[:,:,0] = np.random.normal(0,xrange_limit/2,(3,Np))  # Random white noise term
+# r[:,:,0] = np.transpose(np.random.uniform(low = [-xrange_limit,-xrange_limit,ro*1.5], high = [xrange_limit, xrange_limit, zhigh_limit/2], size =(Np,3)))  # Random white noise term
+
 # r[2,:,0] = 0
 # r[0,0,0] = 0e-6
 # r[1,0,0] = 0e-6
@@ -240,12 +249,7 @@ r[2,:,0] = 100e-6
 print('Solving Langevin equation ... \n')
 
 for m in range(Nt-1):
-    # v_temp[:,:,m] = fct[:,:,m]/delta_t + force_movingDEP(r[:,:,m],t[m], elec_spacing,Np)/gamma 
-    # v_temp[:,:,m] = fct[:,:,m]/delta_t + force_trap(r[:,:,m],0,t[m], Np)/gamma 
-    
-    # tmp = (fct[:,:,m]/delta_t + force_trap(r[:,:,m],0,t[m], Np)/gamma - velocity_adjust(r[:,:,m],fct[:,:,m]/delta_t + force_trap(r[:,:,m],0,t[m], Np)/gamma, ro)).max()
-    # print(tmp)
-    
+       
     # force_temp = force_trap(r[:,:,m],0,t[m], Np)
     force_temp = force_profile(r[:,:,m],t[m])
     
@@ -257,16 +261,7 @@ for m in range(Nt-1):
     
     r[:,:, m+1] = r[:,:,m] + v[:,:,m+1]*delta_t             # Euler-Cromer method
 
-    # r[:,:, m+1] = r[:,:,m] + (v[:,:,m] + v[:,:,m+1])*delta_t*0.5 
-    # r[2,:,:] = 0    # Fix z position to 0 to limit motion in 2D only
     
-    # v[:,:,m] = velocity_adjust(r[:,:,m], fct[:,:,m]/delta_t + force_trap(r[:,:,m],0,t[m], Np)/gamma, ro)
-    #v[:,:,m] = velocity_adjust(r[:,:,m],fct[:,:,m]/delta_t + force_movingDEP(r[:,:,m],t[m], elec_spacing,Np)/gamma, ro)
-    
-    # r[:,:, m+1] = r[:,:,m] + v[:,:,m]*delta_t 
-
-    
- 
 
 
 
@@ -275,57 +270,19 @@ print('Done. \n')
     
 
 
+
 r_um = r*1e6   #  um dimensions for plotting
 v_um = v*1e6   # velocity in um/s
-#print(fct)
-#print(x)
 
 
-# Plotting time vs position data
+# Plotting time vs position data and velocity data
 py.figure()
-#py.plot(t,x_um[:,0])
+
 for np in range(Np):
-    py.plot(t,r_um[0, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
-
-# py.plot(t,x_um[:,2])
-py.xlabel('$t$ (s)')
-py.ylabel('$x$ ($\mu$m)')
-py.legend()
-
-
-py.figure()
-#py.plot(t,x_um[:,0])
-for np in range(Np):
-    py.plot(t,r_um[1, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
-
-# py.plot(t,x_um[:,2])
-py.xlabel('$t$ (s)')
-py.ylabel('$y$ ($\mu$m)')
-py.legend()
-
-
-py.figure()
-#py.plot(t,x_um[:,0])
-for np in range(Np):
-    py.plot(t,r_um[2, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
-
-# py.plot(t,x_um[:,2])
-py.xlabel('$t$ (s)')
-py.ylabel('$z$ ($\mu$m)')
-py.legend()
-
-
-# Plotting time vs position data
-py.figure()
-#py.plot(t,x_um[:,0])
-for np in range(Np):
-    py.plot(t,v_um[1, np,:], label = 'Particle %s' % np)     # y-position, partilce np, all time
-
-# py.plot(t,x_um[:,2])
-py.xlabel('$t$ (s)')
-py.ylabel('$v_y$ ($\mu$m/s)')
-py.legend()
-
+    my_plot(1, t,r_um[0, np,:], '$t$ (s)', '$x$ ($\mu$m)', 'Particle %s' % np)         # x-position, partilce np, all time
+    my_plot(2, t,r_um[1, np,:], '$t$ (s)', '$y$ ($\mu$m)', 'Particle %s' % np)         # y-position, partilce np, all time
+    my_plot(3, t,r_um[2, np,:], '$t$ (s)', '$z$ ($\mu$m)', 'Particle %s' % np)         # z-position, partilce np, all time
+    my_plot(4, t,v_um[1, np,:], '$t$ (s)', '$v_y$ ($\mu$m/s)', 'Particle %s' % np)     # vy-velocity, partilce np, all time
 
 
 # Plotting position scatter data
@@ -370,11 +327,9 @@ ax3.set_ylim(1e6*zlow_limit, 1e6*zhigh_limit)
 
 
 py.sca(ax2)
-substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-py.gca().add_patch(substrate_yz)
+draw_yz(0)
 py.sca(ax3)
-substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-py.gca().add_patch(substrate_yz)
+draw_xz(0)
 
 # ax.set_size_inches(6,6)
 
