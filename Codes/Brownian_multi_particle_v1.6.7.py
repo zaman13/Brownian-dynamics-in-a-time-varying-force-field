@@ -70,6 +70,9 @@ Updates
 - March 14, 2021
         - Streamlined the plots
         - Fixed random distribution of initial position
+- March 17, 2021
+        - Steamlined the draw_geo() function within the force files
+        - Moved the definition of ro and tfinal from the main file to the force files
         
         
 """
@@ -145,7 +148,7 @@ def animate(i):
     #py.text(0,100,'time, t =',fontsize=12) 
     time_string.set_text(time_template % (i*fct_adj*delta_t))  # Adjust time display by fct_adj factor
     py.sca(ax1)
-    draw_xy(i*fct_adj*delta_t)
+    draw_geo(i*fct_adj*delta_t, ax1, ax2, ax3)
      
     return beads_xy
 
@@ -166,14 +169,14 @@ def my_plot(fig_no, xp,yp,xlbl,ylbl,lgnd):
 k_B = 1.38e-23
 T = 300
 eta = 8.9e-4
-ro = 10e-6;
+# ro = 10e-6;              # import ro from the force file
 gamma = 6*np.pi*eta*ro
 D0 = k_B*T/gamma
 
 
 frame_rate = 30   # Animation frame rate in fps
 
-tfinal =  38  #38 # 6 # 38
+# tfinal =  12  #38 # 6 # 38         # import tfinal from force file
 Nt =frame_rate*40 # 300 #1501   # Number of time steps
 Np = 3       # Number of particles
 # xplt_limit = 250e-6;
@@ -326,10 +329,10 @@ ax3.set_xlim(-1e6*xrange_limit, 1e6*xrange_limit)
 ax3.set_ylim(1e6*zlow_limit, 1e6*zhigh_limit)
 
 
-py.sca(ax2)
-draw_yz(0)
-py.sca(ax3)
-draw_xz(0)
+# py.sca(ax2)
+# draw_yz(0)
+# py.sca(ax3)
+# draw_xz(0)
 
 # ax.set_size_inches(6,6)
 

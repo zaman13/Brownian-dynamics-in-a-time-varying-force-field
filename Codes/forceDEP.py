@@ -11,6 +11,10 @@ import pylab as py
 
 
 
+ro = 10e-6
+tfinal = 38
+
+
 xrange_limit = 250e-6   # Max and min of x axis range for plotting animation
 zlow_limit = -20e-6
 zhigh_limit = 150e-6
@@ -24,7 +28,7 @@ elec_spacing = 50
 
 
 # Draw electrodes for the animation
-def draw_xy(tm):
+def draw_geo(tm, ax_xy, ax_yz, ax_xz):
     # tm is a dummy argument for this case (to make it consistent with other force functions)
     
     # The flag_source_state variable is used to draw/erase the source geometry only once
@@ -39,6 +43,7 @@ def draw_xy(tm):
     
     
     if flag_source_state == 0:
+        py.sca(ax_xy)
         substrate_xy = py.Rectangle((-xrange_limit*1e6, -xrange_limit*1e6),2*xrange_limit*1e6,2*xrange_limit*1e6,fc='#f9f9f9')
         py.gca().add_patch(substrate_xy)
         for kk in range(-2,3):
@@ -46,19 +51,23 @@ def draw_xy(tm):
             py.gca().add_patch(rectangle)
             # ax.add_patch(rectangle)
         
+        py.sca(ax_yz)
+        substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+        py.gca().add_patch(substrate_yz)
+         
+        py.sca(ax_xz)
+        substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+        py.gca().add_patch(substrate_xz)
+
+        
+        
         print('Drawing source\n')
         flag_source_state = 1
 
 
 
-def draw_yz(tm):
-    substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-    py.gca().add_patch(substrate_yz)
-    
 
-def draw_xz(tm):
-    substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-    py.gca().add_patch(substrate_xz)
+
 
 # # Read force data from data file
 # Mdata = np.genfromtxt('xsweep_ro=10u,zo=25u.csv',delimiter=',',skip_header=5)

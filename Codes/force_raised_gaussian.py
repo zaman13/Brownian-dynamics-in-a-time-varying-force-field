@@ -8,6 +8,11 @@ Created on March 6, 2021
 
 import numpy as np
 import pylab as py
+import matplotlib as plt
+
+
+ro = 2e-6
+tfinal = 12
 
 
 xrange_limit = 30e-6    # Max and min of x axis range for plotting animation
@@ -26,44 +31,74 @@ A_well = 4000*1.38e-23*300   # well depth
 
 
 
-def draw_xy(tm):
+def draw_geo(tm, ax_xy, ax_yz, ax_xz):
     # March 7, 2021
     
     # The flag_source_state variable is used to draw/erase the source geometry only once
     # This is necessary to speed up the animation.
-    global flag_source_state  # Make this variable global so that the assigned value remains saved globally as t changes
-    
+    global flag_source_state_1  # Make this variable global so that the assigned value remains saved globally as t changes
+    global flag_source_state_2
         
-    if 'flag_source_state' not in globals():
+    if 'flag_source_state_1' not in globals():
         global flag_source_state     # Make this variable global so that the assigned value remains saved globally as t changes
-        flag_source_state = 0        # initialize with OFF state
+        flag_source_state_1 = 0        # initialize with OFF state
         print('Defining global flag for source geometry \n')
     
+    if 'flag_source_state_2' not in globals():
+        global flag_source_state       # Make this variable global so that the assigned value remains saved globally as t changes
+        flag_source_state_2 = 0        # initialize with OFF state
+        print('Defining global flag for source geometry \n')
+      
+    
+    # Draw static geometry (only once)
+    if flag_source_state_2 < 1:
+        py.sca(ax_yz)
+        substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+        py.gca().add_patch(substrate_yz)
+        
+        py.sca(ax_xz)
+        substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+        py.gca().add_patch(substrate_xz)
+        
+        py.sca(ax_xy)
+        substrate_xy = py.Rectangle((-xrange_limit*1e6, -xrange_limit*1e6),2*xrange_limit*1e6,2*xrange_limit*1e6,fc='#f9f9f9')
+        py.gca().add_patch(substrate_xy)
+        flag_source_state_2 = 1
+        
+        
     
     # Draw source
-    if (tm > 1) & (tm < 8) & (flag_source_state < 1):
-        patch_spot = py.Circle((0, 0), 0.5*w_well*1e6, fc='#ff8c00',alpha = 0.8)
-        py.gca().add_patch(patch_spot)
-        flag_source_state = 1
+    if (tm > 1) & (tm < 8) & (flag_source_state_1 < 1):
+        patch_spot_xy = py.Circle((0, 0), 0.5*w_well*1e6, fc='#ff8c00',alpha = 0.8)
+        # patch_spot_yz = plt.patches.Arc((0, 0), 0.5*w_well*1e6, 0.5*w_well*1e6,0, 0, 180, fc='#ff8c00',alpha = 0.8)
+        
+        
+        py.sca(ax_xy)
+        py.gca().add_patch(patch_spot_xy)
+        
+        # py.sca(ax_yz)
+        # py.gca().add_patch(patch_spot_yz)
+        
+        flag_source_state_1 = 1
         print('Drawing source\n')
         
     # Erase source (draw a white circle)   
-    if (tm > 8) & (flag_source_state == 1): 
-        patch_spot = py.Circle((0, 0), 0.51*w_well*1e6, fc='#ffffff',alpha = 1)
+    if (tm > 8) & (flag_source_state_1 == 1): 
+        patch_spot = py.Circle((0, 0), 0.51*w_well*1e6, fc='#f9f9f9',alpha = 1)
         py.gca().add_patch(patch_spot)
         print('Erasing source\n')
-        flag_source_state = 0
+        flag_source_state_1 = 0
    
     
 
-def draw_yz(tm):
-    substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-    py.gca().add_patch(substrate_yz)
+# def draw_yz(tm):
+#     substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+#     py.gca().add_patch(substrate_yz)
     
 
-def draw_xz(tm):
-    substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
-    py.gca().add_patch(substrate_xz)
+# def draw_xz(tm):
+#     substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
+#     py.gca().add_patch(substrate_xz)
 
 
 # This is function that is called from the main program
