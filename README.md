@@ -58,6 +58,22 @@ The position and velocity profiles are:
 </p>
 
 
+### Sample output for optical trap (Gaussian potential well):
+<p float="left">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/br_v1.6.gif" alt="alt text" width="720">
+</p>
+
+The position and velocity profiles are:
+<p float="left">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/x.png" alt="alt text" width="240">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/y.png" alt="alt text" width="240">
+</p>
+
+<p float="left">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/z.png" alt="alt text" width="240">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/vy.png" alt="alt text" width="240">
+</p>
+
 
 
 
