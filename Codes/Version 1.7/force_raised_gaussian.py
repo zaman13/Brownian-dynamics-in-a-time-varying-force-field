@@ -16,7 +16,8 @@ from parameters import *
 
 # Particle parameters (number and raidus array)
 Np = 4                             # Number of particles
-ro =  np.zeros((Np,1)) + 2e-6
+# ro =  np.zeros((Np,1)) + 2e-6
+ro =  np.zeros(Np) + 2e-6
 ro[0] = 1.5e-6
 ro[1] = 2.5e-6
 

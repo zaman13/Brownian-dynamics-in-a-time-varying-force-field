@@ -76,6 +76,11 @@ Updates
 - March 19-20, 2021
         - Generalized the code for working with non-homogeneous particles (particles with different radius and different mass)     
         - Released as version 1.7.0
+- March 24-25, 2021
+        - Updated the Diffusion tensor + hydrodynamic interactions
+        - Redefined ro as a (Np,) vector instead of (Np,1) vector
+        - Updated plot font size
+        - Released as version 1.7.2
         
 """
 
@@ -98,19 +103,15 @@ from particle_particle_collision_adjust import *
 from particle_wall_collision_adjust import *
 
 from forceDEP import *
-# from force_spring_trap import *
 # from force_raised_gaussian import *
 
 
 # Derived paremeters:
 # =============================================================================
-gamma0 = 6*np.pi*eta*ro
-gamma = np.zeros((3,Np,Nt)) 
+gamma0 = 6*np.pi*eta*ro         # friction coefficient (Np,) array
 
-gamma[:,range(Np),:]= gamma0
-
-D0 = k_B*T/gamma
-mo = rho*(4/3)*np.pi*ro**3      # mass of a polystyrene bead in kg
+D0 = k_B*T/gamma0               # Free space diffusion coefficien. (Np,) array
+mo = rho*(4/3)*np.pi*ro**3      # mass of a polystyrene bead in kg. (Np,) array
 # =============================================================================
 
 
@@ -118,9 +119,12 @@ start_time = time.time()
 print('\n\n===========================================\n')
 
 
-
+py.rcParams['font.size'] = 14
    
 
+
+
+# =============================================================================
 # Animation function. Reads out the positon coordinates sequentially
 
 def init():
@@ -141,7 +145,12 @@ def init():
     
     
     return beads_xy
+# =============================================================================
 
+
+
+
+# =============================================================================
 def animate(i):
     # Animation function
     # This function is called frame_rate*tfinal times
@@ -166,21 +175,47 @@ def animate(i):
     draw_geo(i*fct_adj*delta_t, ax1, ax2, ax3)
      
     return beads_xy
+# =============================================================================
 
 
+
+
+# =============================================================================
 def my_plot(fig_no, xp,yp,xlbl,ylbl,lgnd):
     py.figure(fig_no)
-    py.plot(xp, yp, label = lgnd)
+       
+    py.plot(xp, yp, label = lgnd, )
     py.xlabel(xlbl)
     py.ylabel(ylbl)
-    py.legend()
+    py.legend(prop={'size': 10})
+# =============================================================================
 
         
     
     
 
-
-
+# =============================================================================
+def Diffusion_tensor(r_in, ro_in):
+    # r_in is a (3,Np) vector
+    # ro_in is (Np,) vector
+    
+    D_tensor = np.zeros((3,Np))
+    
+    z_in = r_in[2,:]    # should be a (Np,) vector
+    ro_z = ro_in/z_in   # (Np,) vector
+    
+    H_parallel = 1 - (9/16)*(ro_z) + (1/8)*(ro_z)**3 - (45/256)*(ro_z)**4 - (1/16)*(ro_z)**5
+    H_perp = (6*z_in**2 + 2*ro_in*z_in)/(6*z_in**2 + 9*ro_in*z_in + 2*ro_in**2)
+    
+    # (k_B*T/(6*np.pi*eta*ro_in))
+    D_tensor[0,:] = D0 * H_parallel
+    D_tensor[1,:] = D0 * H_parallel
+    D_tensor[2,:] = D0 * H_perp
+    
+    
+    return D_tensor
+# =============================================================================
+    
 
 
 
@@ -204,7 +239,7 @@ force_temp = np.zeros((3,Np))
 v_drift = np.zeros((3,Np))           # Drift velocity (constant, time independent, same for all particles)
 # v_drift[0,:] = -2e-6                 # Drift adjust
 w = np.random.normal(0,1,(3,Np,Nt))  # Random white noise term
-D = D0            # Diffustion tensor
+# D = D0            # Diffustion tensor
 # =============================================================================
 
 
@@ -212,12 +247,13 @@ D = D0            # Diffustion tensor
 # =============================================================================
 delta_t = t[2]-t[1]     # time step
 # fct1 = np.sqrt(2*D*delta_t)
-fct11 = np.sqrt(2*D/delta_t)
+# fct11 = np.sqrt(2*D/delta_t)
 
-# fct = np.multiply(fct1,w)
-v_br = np.multiply(fct11,w)
+# # fct = np.multiply(fct1,w)
+# v_br = np.multiply(fct11,w)
 
-fct2 = mo/(gamma*delta_t)
+# fct2 = mo/(gamma*delta_t)
+
 # =============================================================================
 
 
@@ -244,14 +280,23 @@ r[2,:,0] = 100e-6
 print('Solving Langevin equation ... \n')
 
 for m in range(Nt-1):
-       
-    # force_temp = force_trap(r[:,:,m],0,t[m], Np)
-    force_temp = force_profile(r[:,:,m],t[m])
+    D = Diffusion_tensor(r[:,:,0],ro.squeeze())        # (3,Np) vector array
     
-    v_temp = 1/(1+fct2[:,:,m])*(fct2[:,:,m]*v[:,:,m] + force_temp/gamma[:,:,m] + v_br[:,:,m])
+    # All of the following factors are (3,Np) vector array
+    Lambda = (mo*D)/(k_B*T*delta_t)                    
+    fct_1 = np.sqrt(2*D/delta_t)
+    fct_2 = D/(k_B*T)
+    
+    # force_temp = force_trap(r[:,:,m],0,t[m], Np)
+    force_ext = force_profile(r[:,:,m],t[m])
+    
+    v_temp = (Lambda/(1+Lambda)) * v[:,:,m] + (1/(1+Lambda)) * ( fct_1 * w[:,:,m]  +  fct_2 * force_ext )
+    
+    
+    # v_temp = 1/(1+fct2[:,:,m])*(fct2[:,:,m]*v[:,:,m] + force_temp/gamma[:,:,m] + v_br[:,:,m])
     # v_temp = v_temp*(-1.0)
-    v_temp = particle_collision_adjust(r[:,:,m], v_temp, ro.squeeze(), mo.squeeze(), damping_factor) + v_drift
-    v[:,:,m+1] = wall_collision_adjust(r[:,:,m], v_temp, ro.squeeze(), damping_factor)
+    v_temp = particle_collision_adjust(r[:,:,m], v_temp, ro, mo, damping_factor) + v_drift
+    v[:,:,m+1] = wall_collision_adjust(r[:,:,m], v_temp, ro, damping_factor)
     # v[:,:,m+1] = v_temp
     r[:,:, m+1] = r[:,:,m] + v[:,:,m+1]*delta_t             # Euler-Cromer method
 
@@ -272,11 +317,11 @@ v_um = v*1e6   # velocity in um/s
 # Plotting time vs position data and velocity data
 py.figure()
 
-for np in range(Np):
-    my_plot(1, t,r_um[0, np,:], '$t$ (s)', '$x$ ($\mu$m)', 'Particle %s' % np)         # x-position, partilce np, all time
-    my_plot(2, t,r_um[1, np,:], '$t$ (s)', '$y$ ($\mu$m)', 'Particle %s' % np)         # y-position, partilce np, all time
-    my_plot(3, t,r_um[2, np,:], '$t$ (s)', '$z$ ($\mu$m)', 'Particle %s' % np)         # z-position, partilce np, all time
-    my_plot(4, t,v_um[1, np,:], '$t$ (s)', '$v_y$ ($\mu$m/s)', 'Particle %s' % np)     # vy-velocity, partilce np, all time
+for p in range(Np):
+    my_plot(1, t,r_um[0, p,:], '$t$ (s)', '$x$ ($\mu$m)', 'Particle %s' % p)         # x-position, partilce np, all time
+    my_plot(2, t,r_um[1, p,:], '$t$ (s)', '$y$ ($\mu$m)', 'Particle %s' % p)         # y-position, partilce np, all time
+    my_plot(3, t,r_um[2, p,:], '$t$ (s)', '$z$ ($\mu$m)', 'Particle %s' % p)         # z-position, partilce np, all time
+    my_plot(4, t,v_um[1, p,:], '$t$ (s)', '$v_y$ ($\mu$m/s)', 'Particle %s' % p)     # vy-velocity, partilce np, all time
 
 
 # Plotting position scatter data

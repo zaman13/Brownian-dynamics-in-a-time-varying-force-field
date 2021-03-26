@@ -7,7 +7,10 @@ Created on Thu Mar 11 16:14:05 2021
 
 Input arguments:
     - r_in is a (3,Np) array
-    - ro is a (Np,) array. For (Np,1) array there are some issues. So, a squeeze command is used when calling the function.
+    - ro is a (Np,) array. For (Np,1) array there are some issues. 
+      So, a squeeze command maybe required when calling the function with (Np,1) vector.
+      For version 1.7.2 and up, this should not be any issue as ro and mo vectors are redefined as (Np,)
+      vectors instead of (Np,1) vectors
 
 - March 19, 2021
         - Adjustments made so that the code works when ro is an array

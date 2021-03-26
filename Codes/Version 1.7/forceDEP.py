@@ -14,10 +14,11 @@ import pylab as py
 # =============================================================================
 
 # Particle parameters (number and raidus array)
-Np = 4                             # Number of particles
-ro =  np.zeros((Np,1)) + 10e-6
-ro[0] = 5e-6
-ro[1] = 8e-6
+Np = 3                             # Number of particles
+# ro =  np.zeros((Np,1)) + 10e-6
+ro =  np.zeros(Np) + 10e-6
+# ro[0] = 5e-6
+# ro[1] = 8e-6
 
 # Time parameters
 tfinal = 38
