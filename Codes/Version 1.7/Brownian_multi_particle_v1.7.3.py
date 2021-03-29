@@ -81,6 +81,8 @@ Updates
         - Redefined ro as a (Np,) vector instead of (Np,1) vector
         - Updated plot font size
         - Released as version 1.7.2
+- March 29, 2021
+        - Bug fix: matplotlib version issues: Replaced py.sca() to py.gcf().sca()
         
 """
 
@@ -171,7 +173,7 @@ def animate(i):
         # print(i)
     #py.text(0,100,'time, t =',fontsize=12) 
     time_string.set_text(time_template % (i*fct_adj*delta_t))  # Adjust time display by fct_adj factor
-    py.sca(ax1)
+    # py.sca(ax1)
     draw_geo(i*fct_adj*delta_t, ax1, ax2, ax3)
      
     return beads_xy

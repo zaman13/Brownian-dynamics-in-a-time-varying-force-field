@@ -64,15 +64,15 @@ def draw_geo(tm, ax_xy, ax_yz, ax_xz):
     
     # Draw static geometry (only once)
     if flag_source_state_2 < 1:
-        py.sca(ax_yz)
+        py.gcf().sca(ax_yz)
         substrate_yz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
         py.gca().add_patch(substrate_yz)
         
-        py.sca(ax_xz)
+        py.gcf().sca(ax_xz)
         substrate_xz = py.Rectangle((-xrange_limit*1e6, zlow_limit*1e6),2*xrange_limit*1e6, abs(zlow_limit)*1e6,fc='#d4d4d4', ec='k')
         py.gca().add_patch(substrate_xz)
         
-        py.sca(ax_xy)
+        py.gcf().sca(ax_xy)
         substrate_xy = py.Rectangle((-xrange_limit*1e6, -xrange_limit*1e6),2*xrange_limit*1e6,2*xrange_limit*1e6,fc='#f9f9f9')
         py.gca().add_patch(substrate_xy)
         flag_source_state_2 = 1
@@ -85,7 +85,7 @@ def draw_geo(tm, ax_xy, ax_yz, ax_xz):
         # patch_spot_yz = plt.patches.Arc((0, 0), 0.5*w_well*1e6, 0.5*w_well*1e6,0, 0, 180, fc='#ff8c00',alpha = 0.8)
         
         
-        py.sca(ax_xy)
+        py.gcf().sca(ax_xy)
         py.gca().add_patch(patch_spot_xy)
         
         # py.sca(ax_yz)
@@ -100,6 +100,8 @@ def draw_geo(tm, ax_xy, ax_yz, ax_xz):
         py.gca().add_patch(patch_spot)
         print('Erasing source\n')
         flag_source_state_1 = 0
+        
+    return 0
    
     
 
