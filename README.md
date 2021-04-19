@@ -36,7 +36,10 @@ The equaiton is numerically solved using the Euler-Maruyama method.
 
 
 
-
+# Incorporated Physics
+- Brownian motion
+- Hindered diffusion (hydrodynamic interactions)
+- Elastic collisions (particle-particle collisions, particle-wall collisions)
 
 
 
