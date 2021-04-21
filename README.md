@@ -22,6 +22,17 @@ The python script was tested with spyder IDE.
   - <b>FuncAnimation()</b>: for animation <a href = "https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.FuncAnimation.html"> <img src="https://img.shields.io/badge/Function-FuncAnimation-00783f" alt="alt text"> </a>
 - <b>Ffmpeg</b>: for saving animation to video file <a href = "https://anaconda.org/conda-forge/ffmpeg"> <img src="https://img.shields.io/badge/Pkg-Ffmpeg-00783f" alt="alt text"> </a> 
 
+
+## Incorporated Physics
+- Brownian motion
+- Hindered diffusion (hydrodynamic interactions)
+- Elastic collisions (particle-particle collisions, particle-wall collisions)
+
+## Features
+- Can simulate multi-particle systems
+- Each particle can have its own distinct size/mass
+- Can save the animation of the motion of the particles as a video file
+
 ## Theory
 The Brownian motion of a colloidal particle in a low Reynolds number environment can be modeled by the Langevin equation: 
 
@@ -36,10 +47,6 @@ The equaiton is numerically solved using the Euler-Maruyama method.
 
 
 
-# Incorporated Physics
-- Brownian motion
-- Hindered diffusion (hydrodynamic interactions)
-- Elastic collisions (particle-particle collisions, particle-wall collisions)
 
 
 
