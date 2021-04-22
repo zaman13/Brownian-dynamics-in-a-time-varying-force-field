@@ -54,6 +54,7 @@ The equaiton is numerically solved using the Euler-Maruyama method.
 
 ## Sample output
 ### Sample output for moving DEP force profile:
+The blue horizonal lines represent electrodes which are excited in sequence. Only one electrode is active at a time (the rest are grounded). A solid surface is assumed to be located along z = 0 plane. The red spheres are polystyrene micro-particles, each having a radius of 10 micron. 
 <p float="left">
 <img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_moving_DEP/br_v1.6.gif" alt="alt text" width="720">
 </p>
