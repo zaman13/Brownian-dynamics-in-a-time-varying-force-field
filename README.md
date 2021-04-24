@@ -72,9 +72,13 @@ The position and velocity profiles are:
 
 
 ### Sample output for optical trap (Gaussian potential well):
+A optical trap that is active during the time interval 1s < t < 8s is simulated. The optical spot is assumed to create a Gaussian potential well. The resulting force profile is given by the gradient of the potential well. 
+
 <p float="left">
 <img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/br_v1.6.gif" alt="alt text" width="720">
 </p>
+
+It can be noted that particles outside capturing range of the trap (i.e. beyond the range where the trapping force is significant) do not get trapped.
 
 The position and velocity profiles are:
 <p float="left">
