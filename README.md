@@ -32,6 +32,7 @@ The python script was tested with spyder IDE.
 - Can simulate multi-particle systems
 - Each particle can have its own distinct size/mass
 - Can save the animation of the motion of the particles as a video file
+- Can create arbitrary polygon based geometry of walls (the collision mechanics are automatically formulated for any defined wall) 
 
 ## Theory
 The Brownian motion of a colloidal particle in a low Reynolds number environment can be modeled by the Langevin equation: 
