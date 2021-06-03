@@ -32,6 +32,7 @@ The python script was tested with spyder IDE.
 - Can simulate multi-particle systems
 - Each particle can have its own distinct size/mass
 - Can save the animation of the motion of the particles as a video file
+- Can create arbitrary polygon based geometry of walls (the collision mechanics are automatically formulated for any defined wall) 
 
 ## Theory
 The Brownian motion of a colloidal particle in a low Reynolds number environment can be modeled by the Langevin equation: 
@@ -91,7 +92,7 @@ The position and velocity profiles are:
 <img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/vy.png" alt="alt text" width="240">
 </p>
 
-
+A large optical spot and a strong gradient force model is used here for illustration purposes. It is possible to simulate optical tweezers with arbitrary spot size and traping potential depth.
 
 
 ## References
