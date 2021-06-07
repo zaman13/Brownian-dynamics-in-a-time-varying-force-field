@@ -95,5 +95,9 @@ The position and velocity profiles are:
 A large optical spot and a strong gradient force model is used here for illustration purposes. It is possible to simulate optical tweezers with arbitrary spot size and traping potential depth.
 
 
+## Acknowledgement
+This work is partially supported by the National Institute of Health (NIH) Grant R01GM138716. 
+
+
 ## References
 
