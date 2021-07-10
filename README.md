@@ -6,7 +6,7 @@
 <a href = "https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/tree/main/Codes"> <img src="https://img.shields.io/badge/version-1.9-red" alt="alt text"> </a>
 </p>
 
-<img align = "right" src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Brownina_moving_force.gif" alt="alt text" width="360">
+<img align = "right" src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_sorter/cell_sorter.gif" alt="alt text" width="480">
 
 A python code to calculate the Brownian motion of a colloidal particle in a time varying force field. The code was developed for the research work of the <a href = "https://hesselink-lab.stanford.edu"> Hesselink research group </a>  at Stanford University. The particle trajectory computed by the code can be useful for designing lab-on-a-chip devices. Please cite this repository when using this code.
 
@@ -94,6 +94,24 @@ The position and velocity profiles are:
 
 A large optical spot and a strong gradient force model is used here for illustration purposes. It is possible to simulate optical tweezers with arbitrary spot size and traping potential depth.
 
+### Sample output for dielectrophoretic cell sorter/separator:
+<p>
+A microfluidic device that can sort/separate live and dead yeast cells is simulated. The device uses electrodes to apply dielectrophoretic forces. Since the material properties and hence the Clausius-Mossotti factor of live cells differ from that of dead cells, they experience different dielectrophoretic forces. Using this principle, the cell sorting/separation operation is accomplished.  
+</p>
+
+<p float="left">
+<img align = "left" src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_sorter/cell_sorter.gif" alt="alt text" width="720">
+</p>
+
+
+
+<p float="left">
+<img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_sorter/y.svg" alt="alt text" width="480">
+</p>
+
+<p>
+The cell separation mechanism can be analyzed by observing the y trajectory of different cells.
+</p>
 
 ## Acknowledgement
 This work is partially supported by the National Institute of Health (NIH) Grant R01GM138716. 
