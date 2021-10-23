@@ -8,7 +8,7 @@
 
 <img align = "right" src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_sorter/cell_sorter.gif" alt="alt text" width="480">
 
-A python code to calculate the Brownian motion of a colloidal particle in a time varying force field. The code was developed for the research work of the <a href = "https://hesselink-lab.stanford.edu"> Hesselink research group </a>  at Stanford University. The particle trajectory computed by the code can be useful for designing lab-on-a-chip devices. Please cite this repository when using this code.
+A python code to calculate the Brownian motion of a colloidal particle in a time varying force field. The code was developed for the research work of the <a href = "https://hesselink-lab.stanford.edu"> Hesselink research group </a>  at Stanford University. The particle trajectory computed by the code can be useful for designing lab-on-a-chip devices. Please cite this repository and the two papers listed in the reference section when using this code.
 
 The current example code shows the transport of a micro-particle along a moving micro-electrode array producing moving dielectrophoretic force. As the micro-electrodes are excited in sequence, the micro-particle follows the position of the active electrode.
 
@@ -119,4 +119,7 @@ This work is partially supported by the National Institute of Health (NIH) Grant
 
 
 ## References
-
+1. Zaman, Mohammad Asif, et al. "Modeling Brownian Microparticle Trajectories in Lab-on-a-Chip Devices with Time Varying Dielectrophoretic or Optical Forces." Micromachines 12.10 (2021): 1265.
+<a href = "https://doi.org/10.1063/5.0049126"> https://doi.org/10.1063/5.0049126 </a>
+2. Zaman, Mohammad Asif, et al. "Microparticle transport along a planar electrode array using moving dielectrophoresis." Journal of Applied Physics 130.3 (2021): 034902.
+<a href = "https://doi.org/10.3390/mi12101265"> https://doi.org/10.3390/mi12101265 </a>
