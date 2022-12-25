@@ -117,6 +117,76 @@ The cell separation mechanism can be analyzed by observing the y trajectory of d
 ## Acknowledgement
 This work is partially supported by the National Institute of Health (NIH) Grant R01GM138716. 
 
+# Update Notes
+- Feb 23, 2021
+        - Moved the force related functions to a separate file 
+        - Interpolation function for the experimental force data has been modified accordingly
+        - Executation/elapsed time added
+        - Status messages added
+        - uploaded as v1.5
+- Feb 24-28, 2021
+        - Added particle-particle elastic collision dynaimics
+        - Works fine for two simultaneous collisions. For larger number of simultaneous collisions, some modifications are needed.                - 
+- March 2, 2021
+        - Decoupled the simulation time step to animation frame rate. They can be independently defined now.
+
+- March 3, 2021
+        - Removed excess parameters from the force functions
+        - Made the different force functions, i.e. forceDEP.py and force_spring_trap.py more consistent with each other
+          Only the import call and final time needs to be adjusted for when switching the force functions. The main output
+          from both imports are function_profile(r,t).
+- March 7, 2021
+        - Added zorder for animating the beads (beads append). This ensures that the beads are always in the foreground (compared to source geometry)        
+        - Added draw_source(t) function inside the animate() function. Also, made the draw_source() as a funciton of time for dynamic
+          manipulation of the source geometry (e.g. turning ON/OFF optical excitation for optical trapping demo.)
+- March 8-10, 2021
+        - Added x,y,z position vs time plots
+        - Added animation for yz, and zx planes along with xy plane
+- March 11, 2021
+        - Added wall collision mechanics
+        - Added substrate graphics
+        - Renamed some of the modules
+- March 14, 2021
+        - Streamlined the plots
+        - Fixed random distribution of initial position
+- March 17, 2021
+        - Steamlined the draw_geo() function within the force files
+        - Moved the definition of ro and tfinal from the main file to the force files
+- March 19-20, 2021
+        - Generalized the code for working with non-homogeneous particles (particles with different radius and different mass)     
+        - Released as version 1.7.0
+- March 24-25, 2021
+        - Updated the Diffusion tensor + hydrodynamic interactions
+        - Redefined ro as a (Np,) vector instead of (Np,1) vector
+        - Updated plot font size
+        - Released as version 1.7.2
+- March 29, 2021
+        - Bug fix: matplotlib version issues: Replaced py.sca() to py.gcf().sca()
+- March 31, 2021
+        - Added feature to plot specific frames of the animation separately (useful for saving images to file)
+- April 10, 2021
+        - Added parameters defining initial particle position range (xi_lim, yi_lim and zi_lim) inside the force functions
+        - Extra text feature on the animation (text_string1 and text_string2)
+- April 11, 2021
+        - Improved axes limit parameter definitions
+- May 3, 2021
+        - Added fluid-velocity term
+- May 6, 2021
+        - Added particle_color() function         
+- May 3-8, 2021      
+        - Generalized wall collision dynamics
+- May 9-27, 2021
+        - Generalized node based geometry definition 
+        - Integration of geometry drawing with geometry definition
+        - Integration of collision dynamics with geometry definition
+        - Reducing the number of particle data plots to reduce clutter
+- May 28, 2021
+        - Functionalized fluid velocity        
+- Aug 11, 2022
+        - Nt definition bug. Nt = frame_rate*40 was incorrect. It should also be multiplied by tfinal
+        - sca() function may cause issues. It might be good be replace it with old version 
+          explicitly defined within geometry_draw module
+
 
 ## References
 1. Zaman, Mohammad Asif, et al. "Modeling Brownian Microparticle Trajectories in Lab-on-a-Chip Devices with Time Varying Dielectrophoretic or Optical Forces." Micromachines 12.10 (2021): 1265.
