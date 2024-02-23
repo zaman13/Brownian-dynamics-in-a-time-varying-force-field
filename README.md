@@ -189,11 +189,15 @@ This work is partially supported by the National Institute of Health (NIH) Grant
 
 
 ## References
-1. Zaman, Mohammad Asif, et al. "Modeling Brownian Microparticle Trajectories in Lab-on-a-Chip Devices with Time Varying Dielectrophoretic or Optical Forces." Micromachines 12.10 (2021): 1265.
+1. Zaman, M. A., et al. "Modeling Brownian Microparticle Trajectories in Lab-on-a-Chip Devices with Time Varying Dielectrophoretic or Optical Forces." Micromachines 12.10 (2021): 1265.
 <a href = "https://doi.org/10.3390/mi12101265"> https://doi.org/10.3390/mi12101265 </a>
 
-2. Zaman, Mohammad Asif, et al. "Microparticle transport along a planar electrode array using moving dielectrophoresis." Journal of Applied Physics 130.3 (2021): 034902.
+2. Zaman, M. A., et al. "Microparticle transport along a planar electrode array using moving dielectrophoresis." Journal of Applied Physics 130.3 (2021): 034902.
 <a href = "https://doi.org/10.1063/5.0049126"> https://doi.org/10.1063/5.0049126 </a>
+
+3. Zaman, M. A., et al. "Controlled transport of individual microparticles using dielectrophoresis." Langmuir 39.1 (2022): 101-110.
+<a href = "https://doi.org/10.1021/acs.langmuir.2c02235"> https://doi.org/10.1021/acs.langmuir.2c02235 </a>
+
 
 ## Acknowledgement
  This work was partially supported by the National Institute of Health (NIH) Grant R01GM138716 and 5R21HG009758.
