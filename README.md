@@ -44,7 +44,7 @@ Here,  $\mathbf{r} = (x_o,y_o,z_o)$ is the position of the center of the particl
 
 The Langevin equation can be converted into the following discrete form:
 
- $m \frac{\mathbf{v}_{i+1} - \mathbf{v}_i}{\Delta t} = \frac{k_B T}{\overset{\leftrightarrow}{\mathbf{D}}(\mathbf{r}_i)} \left[\mathbf{v}_f,_i- \mathbf{v} _{i+1} + \sqrt{\frac{2}{\Delta t}} \overset{\leftrightarrow}{\mathbf{D}} _{1/2} (\mathbf{r}_i)  \mathbf{w}_i \right]  +  \mathbf{F} _{e, i}(\mathbf{r}_i)$
+ $m \frac{\mathbf{v}_{i+1} - \mathbf{v}_i}{\Delta t} = \frac{k_B T}{\overset{\leftrightarrow}{\mathbf{D}}(\mathbf{r}_i)} \left[\mathbf{v} _{f,i}- \mathbf{v} _{i+1} + \sqrt{\frac{2}{\Delta t}} \overset{\leftrightarrow}{\mathbf{D}} _{1/2} (\mathbf{r}_i)  \mathbf{w}_i \right]  +  \mathbf{F} _{e, i}(\mathbf{r}_i)$
 
 The equaiton is numerically solved using the Euler-Maruyama method.
 
