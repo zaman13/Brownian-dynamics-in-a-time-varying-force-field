@@ -8,7 +8,7 @@
 
 <img align = "right" src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_sorter/cell_sorter.gif" alt="alt text" width="480">
 
-A python code to calculate the Brownian motion of a colloidal particle in a time varying force field. The code was developed for the research work of the <a href = "https://hesselink-lab.stanford.edu"> Hesselink research group </a>  at Stanford University. The particle trajectory computed by the code can be useful for designing lab-on-a-chip devices. Please cite this repository and the two papers listed in the reference section when using this code.
+A python code to calculate the Brownian motion of a colloidal particle in a time varying force field. The code was developed for the research work of the <a href = "https://hesselinkgroup.stanford.edu" target="_blank"> Hesselink research group </a>  at Stanford University. The particle trajectory computed by the code can be useful for designing lab-on-a-chip devices. Please cite this repository and the two papers listed in the reference section when using this code.
 
 The current example code shows the transport of a micro-particle along a moving micro-electrode array producing moving dielectrophoretic force. As the micro-electrodes are excited in sequence, the micro-particle follows the position of the active electrode.
 
@@ -94,7 +94,9 @@ The position and velocity profiles are:
 <img src="https://github.com/zaman13/Brownian-dynamics-in-a-time-varying-force-field/blob/main/Figs_Gaussian/vy.png" alt="alt text" width="240">
 </p>
 
-A large optical spot and a strong gradient force model is used here for illustration purposes. It is possible to simulate optical tweezers with arbitrary spot size and traping potential depth.
+A large optical spot and a strong gradient force model is used here for illustration purposes. It is possible to simulate optical tweezers with arbitrary spot size and traping potential depth. A few more animated examples can be found in the <a href = "https://hesselinkgroup.stanford.edu"> Hesselink lab YouTube channel </a>:
+- <a href = "https://www.youtube.com/watch?v=WNjZbJTMfNA" target="_blank"> https://www.youtube.com/watch?v=WNjZbJTMfNA </a>
+- <a href = "https://www.youtube.com/shorts/NkRCsPFsXu8" target="_blank"> https://www.youtube.com/shorts/NkRCsPFsXu8 </a>
 
 ### Sample output for dielectrophoretic cell sorter/separator:
 <p>
