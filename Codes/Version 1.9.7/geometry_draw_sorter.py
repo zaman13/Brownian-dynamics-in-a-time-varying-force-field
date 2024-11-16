@@ -174,9 +174,9 @@ def draw_geo(tm, ax_xy, ax_yz, ax_xz):
         
 
     
-    if 'str1' not in globals():
-        str1 = 'Live cell'
-        str2 = 'Dead cell'
+    # if 'str1' not in globals():
+        # str1 = 'Live cell'
+        # str2 = 'Dead cell'
     
     return str1, str2
    
