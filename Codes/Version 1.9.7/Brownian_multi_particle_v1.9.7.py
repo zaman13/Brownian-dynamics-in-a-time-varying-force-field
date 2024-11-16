@@ -141,9 +141,9 @@ from particle_particle_collision_adjust import *
 from particle_wall_collision_adjust import *
 
 
-from force_OT import *
-from geometry_def_OT import *
-from geometry_draw_OT import *
+# from force_OT import *
+# from geometry_def_OT import *
+# from geometry_draw_OT import *
 
 
 # from force_sorter import *
@@ -151,9 +151,9 @@ from geometry_draw_OT import *
 # from geometry_draw_sorter import *
 
 
-# from force_DEP import *
-# from geometry_def_DEP import *
-# from geometry_draw_DEP import *
+from force_DEP import *
+from geometry_def_DEP import *
+from geometry_draw_DEP import *
 
 
 
@@ -275,21 +275,21 @@ def anim_setup():
     
     # Define 3 subplots. First one spanning both rows of column 1, the rest two taking the ramining 2 subplots
     # Original
-    ax_xy = fig.add_subplot(gs[:,0],aspect = 1)       # xy plane (column left, both rows)
-    ax_yz = fig.add_subplot(gs[0,1],aspect = 1)       # yz plane (column right, top row)
-    ax_xz = fig.add_subplot(gs[1,1],aspect = 1)       # xz plane (column right, bottoom row)
+    # ax_xy = fig.add_subplot(gs[:,0],aspect = 1)       # xy plane (column left, both rows)
+    # ax_yz = fig.add_subplot(gs[0,1],aspect = 1)       # yz plane (column right, top row)
+    # ax_xz = fig.add_subplot(gs[1,1],aspect = 1)       # xz plane (column right, bottoom row)
    
-    # Set figure dpi and size
-    fig.set_dpi(150)
-    fig.set_size_inches(14, 9)
+    # # Set figure dpi and size
+    # fig.set_dpi(150)
+    # fig.set_size_inches(14, 9)
     
     # Nov. 1, 2024: Vertical stack (short format)
-    # gs = py.GridSpec(3,1) # 3 rows, 1 columns
-    # ax_xy = fig.add_subplot(gs[0,0],aspect = 1)       # xy plane (column 1, row 1)
-    # ax_yz = fig.add_subplot(gs[1,0],aspect = 1)       # yz plane (column 1, row 2)
-    # ax_xz = fig.add_subplot(gs[2,0],aspect = 1)       # xz plane (column 1, row 3)
-    # fig.set_dpi(150)
-    # fig.set_size_inches(9,16)
+    gs = py.GridSpec(3,1) # 3 rows, 1 columns
+    ax_xy = fig.add_subplot(gs[0,0],aspect = 1)       # xy plane (column 1, row 1)
+    ax_yz = fig.add_subplot(gs[1,0],aspect = 1)       # yz plane (column 1, row 2)
+    ax_xz = fig.add_subplot(gs[2,0],aspect = 1)       # xz plane (column 1, row 3)
+    fig.set_dpi(150)
+    fig.set_size_inches(9,16)
 
     
     
